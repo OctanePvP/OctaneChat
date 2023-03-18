@@ -1,0 +1,15 @@
+name: OctaneChat
+version: '${project.version}'
+main: com.octanepvp.splityosis.octanechat.OctaneChat
+api-version: 1.19
+authors: [ SplitYoSis ]
+depend:
+  - PlaceholderAPI
+
+commands:
+  octanechat:
+    description: octanechat reload
+    aliases:
+      - oc
+      - ochat
+    permission: octanechat.reload

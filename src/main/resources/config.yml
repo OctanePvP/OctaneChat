@@ -1,0 +1,22 @@
+#Made by SplitYoSis
+#Support at Discord: SplitYoSis#0001
+
+#To call a component use '%{' before and '}% after a defined component name.
+format: "%luckperms_prefix%%{player-name}%%luckperms_suffix%&f: %message%"
+
+
+#Components section.
+#To make a new component simply copy/paste a current one and change the values.
+#Make sure there aren't any name duplicates.
+components:
+  player-name: #This is the component's name
+    display-text: "&f%player_name%"
+    hover-text:
+      - "&7Name: &d%player_name%"
+      - "&7Balance: &d$%vault_eco_balance_formatted%"
+      - ""
+      - "&7&oClick to say hello!"
+    #ClickEvent actions: COPY_TO_CLIPBOARD, OPEN_URL, RUN_COMMAND, SUGGEST_COMMAND
+    click-event:
+      action: "RUN_COMMAND"
+      value: "/msg %player_name% hello"
