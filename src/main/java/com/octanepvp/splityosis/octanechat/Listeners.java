@@ -1,5 +1,6 @@
 package com.octanepvp.splityosis.octanechat;
 
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -14,6 +15,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Listeners implements Listener, CommandExecutor {
@@ -42,19 +44,18 @@ public class Listeners implements Listener, CommandExecutor {
 
 
         for (Player reader : Bukkit.getOnlinePlayers()){
-            TextComponent msg = new TextComponent();
+            List<BaseComponent> msg = new ArrayList<>();
             processedFormat.forEach(component -> {
-                msg.addExtra(component.clone().setRelationalPlaceholders(e.getPlayer(), reader).fixColors().replace("%message%", playerMessage).compile());
+                msg.addAll(Arrays.asList(component.clone().setRelationalPlaceholders(e.getPlayer(), reader).fixColors().replace("%message%", playerMessage).compile()));
             });
-            reader.spigot().sendMessage(msg);
+            reader.spigot().sendMessage(msg.toArray(new BaseComponent[0]));
         }
 
-        TextComponent msg = new TextComponent();
+        List<BaseComponent> msg = new ArrayList<>();
         processedFormat.forEach(component -> {
-            msg.addExtra(component.clone().setRelationalPlaceholders(e.getPlayer(), null).fixColors().replace("%message%", playerMessage).compile());
+            msg.addAll(Arrays.asList(component.clone().setRelationalPlaceholders(e.getPlayer(), null).fixColors().replace("%message%", playerMessage).compile()));
         });
-        Bukkit.getConsoleSender().spigot().sendMessage(msg);
-
+        Bukkit.getConsoleSender().spigot().sendMessage(msg.toArray(new BaseComponent[0]));
     }
 
 

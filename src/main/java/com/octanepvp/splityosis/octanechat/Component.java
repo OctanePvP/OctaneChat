@@ -52,23 +52,24 @@ public class Component {
         return this;
     }
 
-    public TextComponent compile(){
-        TextComponent component = new TextComponent(displayText);
+    public BaseComponent[] compile(){
+        BaseComponent[] components = TextComponent.fromLegacyText(displayText);
 
-        if (hoverText != null){
-            ComponentBuilder builder = new ComponentBuilder();
-            for (int i = 0; i < hoverText.size(); i++) {
-                if (i != 0)
-                    builder.append("\n");
-                builder.append(hoverText.get(i));
+        for (int i = 0; i < components.length; i++) {
+            if (hoverText != null) {
+                ComponentBuilder builder = new ComponentBuilder();
+                for (int j = 0; j < hoverText.size(); j++) {
+                    if (j != 0)
+                        builder.append("\n");
+                    builder.append(TextComponent.fromLegacyText(hoverText.get(j)));
+                }
+                components[i].setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, builder.create()));
             }
-            component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, builder.create()));
+
+            if (clickAction != null && clickValue != null)
+                components[i].setClickEvent(new ClickEvent(clickAction, clickValue));
         }
-
-        if (clickAction != null && clickValue != null)
-            component.setClickEvent(new ClickEvent(clickAction, clickValue));
-
-        return component;
+        return components;
     }
 
     public Component clone(){

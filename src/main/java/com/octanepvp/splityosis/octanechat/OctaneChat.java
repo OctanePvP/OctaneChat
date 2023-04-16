@@ -1,9 +1,9 @@
 package com.octanepvp.splityosis.octanechat;
 
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -89,28 +89,20 @@ public final class OctaneChat extends JavaPlugin {
     }
 
     public static final Pattern HEX_PATTERN = Pattern.compile("&(#[A-Fa-f0-9]{6})");
-    public static final char COLOR_CHAR = ChatColor.COLOR_CHAR;
-
-    public static String translateHexColorCodes(String message) {
-        Matcher matcher = HEX_PATTERN.matcher(message);
-        StringBuffer buffer = new StringBuffer(message.length() + 4 * 8);
+    public static String translateHexColorCodes(String string) {
+        Matcher matcher = HEX_PATTERN.matcher(string);
         while (matcher.find()) {
-            String group = matcher.group(1);
-            matcher.appendReplacement(buffer, COLOR_CHAR + "x"
-                    + COLOR_CHAR + group.charAt(0) + COLOR_CHAR + group.charAt(1)
-                    + COLOR_CHAR + group.charAt(2) + COLOR_CHAR + group.charAt(3)
-                    + COLOR_CHAR + group.charAt(4) + COLOR_CHAR + group.charAt(5)
-            );
+            string = string.replace(matcher.group(), "" + net.md_5.bungee.api.ChatColor.of(matcher.group().substring(1)));
         }
-        return matcher.appendTail(buffer).toString();
+        return string;
     }
 
-    public static String translateOldColorCodes(String message){
-        return ChatColor.translateAlternateColorCodes('&', message);
+    public static String translateOldColorCodes(String input) {
+        return ChatColor.translateAlternateColorCodes('&', input);
     }
 
     public static String translateAllColors(String str){
-        return translateHexColorCodes(translateOldColorCodes(str));
+        return translateOldColorCodes(translateHexColorCodes(str));
     }
 
     public static List<String> translateAllColors(List<String> lst){

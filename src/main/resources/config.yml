@@ -1,7 +1,7 @@
 #Made by SplitYoSis
 #Support at Discord: SplitYoSis#0001
 
-#To call a component use '%{' before and '}% after a defined component name.
+#To call a defined component use '%{' before and '}% after the component's name.
 format: "%luckperms_prefix%%{player-name}%%luckperms_suffix%&f: %message%"
 
 
