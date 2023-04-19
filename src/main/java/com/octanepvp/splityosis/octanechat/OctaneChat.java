@@ -71,12 +71,17 @@ public final class OctaneChat extends JavaPlugin {
 
     public static List<TextComponent> separateString(String message) {
         List<TextComponent> components = new ArrayList<>();
-        Pattern pattern = Pattern.compile("%\\{([^}]+)}%");
+        Pattern pattern = Pattern.compile("%\\{([^}]+)}%|%message%");
         Matcher matcher = pattern.matcher(message);
         int lastEnd = 0;
         while (matcher.find()) {
             if (matcher.start() > lastEnd) {
                 components.add(new TextComponent(message.substring(lastEnd, matcher.start())));
+            }
+            if (matcher.group().equals("%message%")){
+                components.add(new TextComponent("%message%"));
+                lastEnd = matcher.end();
+                continue;
             }
             String placeholder = matcher.group(1);
             components.add(new TextComponent("%{" + placeholder + "}%"));

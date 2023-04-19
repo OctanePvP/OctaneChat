@@ -4,6 +4,8 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.block.Block;
+import org.bukkit.block.data.Rotatable;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -11,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,28 +36,43 @@ public class Listeners implements Listener, CommandExecutor {
         List<Component> formatTemplate = plugin.getChatFormat();
         List<Component> processedFormat = new ArrayList<>();
 
-        String playerMessage;
+        String rawMessage;
         if (e.getPlayer().hasPermission("octanechat.use-colors"))
-            playerMessage = OctaneChat.translateAllColors(e.getMessage());
-        else playerMessage = e.getMessage();
+            rawMessage = OctaneChat.translateAllColors(e.getMessage());
+        else
+            rawMessage = e.getMessage();
 
-        formatTemplate.forEach(component -> {
+        List<BaseComponent> message = Arrays.asList(TextComponent.fromLegacyText(rawMessage));
+
+        PlayerChatMessageEvent event = new PlayerChatMessageEvent(true, rawMessage, message);
+        Bukkit.getServer().getPluginManager().callEvent(event);
+        if (event.isCancelled()) return;
+        message = event.getMessage();
+
+        for (Component component : formatTemplate) {
             processedFormat.add(component.clone().setPlayerPlaceholders(e.getPlayer()));
-        });
-
+        }
 
         for (Player reader : Bukkit.getOnlinePlayers()){
             List<BaseComponent> msg = new ArrayList<>();
-            processedFormat.forEach(component -> {
-                msg.addAll(Arrays.asList(component.clone().setRelationalPlaceholders(e.getPlayer(), reader).fixColors().replace("%message%", playerMessage).compile()));
-            });
+            for (Component component : processedFormat) {
+                if (component.getDisplayText().equals("%message%"))
+                    msg.addAll(message);
+                else
+                    msg.addAll(Arrays.asList(component.clone().setRelationalPlaceholders(e.getPlayer(), reader).fixColors().compile()));
+            }
             reader.spigot().sendMessage(msg.toArray(new BaseComponent[0]));
         }
 
         List<BaseComponent> msg = new ArrayList<>();
-        processedFormat.forEach(component -> {
-            msg.addAll(Arrays.asList(component.clone().setRelationalPlaceholders(e.getPlayer(), null).fixColors().replace("%message%", playerMessage).compile()));
-        });
+        for (Component component : processedFormat) {
+            System.out.println(component.getDisplayText());
+            if (component.getDisplayText().equals("%message%")) {
+                msg.addAll(message);
+            }
+            else
+                msg.addAll(Arrays.asList(component.clone().setRelationalPlaceholders(e.getPlayer(), null).fixColors().compile()));
+        }
         Bukkit.getConsoleSender().spigot().sendMessage(msg.toArray(new BaseComponent[0]));
     }
 

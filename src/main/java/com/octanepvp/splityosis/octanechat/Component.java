@@ -75,4 +75,36 @@ public class Component {
     public Component clone(){
         return new Component(displayText, hoverText, clickAction, clickValue);
     }
+
+    public String getDisplayText() {
+        return displayText;
+    }
+
+    public void setDisplayText(String displayText) {
+        this.displayText = displayText;
+    }
+
+    public List<String> getHoverText() {
+        return hoverText;
+    }
+
+    public void setHoverText(List<String> hoverText) {
+        this.hoverText = hoverText;
+    }
+
+    public ClickEvent.Action getClickAction() {
+        return clickAction;
+    }
+
+    public void setClickAction(ClickEvent.Action clickAction) {
+        this.clickAction = clickAction;
+    }
+
+    public String getClickValue() {
+        return clickValue;
+    }
+
+    public void setClickValue(String clickValue) {
+        this.clickValue = clickValue;
+    }
 }
