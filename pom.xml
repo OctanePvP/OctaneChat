@@ -38,6 +38,8 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <outputDirectory>C:\Users\thoma\Desktop\Prism\plugins</outputDirectory>
+                            <shadedArtifactAttached>true</shadedArtifactAttached>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                         </configuration>
                     </execution>
