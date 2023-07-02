@@ -1,6 +1,7 @@
 package com.octanepvp.splityosis.octanechat;
 
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -20,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class Listeners implements Listener, CommandExecutor {
 
@@ -52,6 +54,11 @@ public class Listeners implements Listener, CommandExecutor {
         for (Component component : formatTemplate) {
             processedFormat.add(component.clone().setPlayerPlaceholders(e.getPlayer()));
         }
+
+//        BaseComponent inventoryComponent = new TextComponent(OctaneChat.translateAllColors("&e" +  e.getPlayer().getDisplayName() + "'s Inventory"));
+//        inventoryComponent.setClickEvent(new ClickEvent(Action.));
+//
+//        message = event.replaceComponents(message, "[inv]", inventoryComponent);
 
         for (Player reader : Bukkit.getOnlinePlayers()){
             List<BaseComponent> msg = new ArrayList<>();
@@ -89,4 +96,9 @@ public class Listeners implements Listener, CommandExecutor {
 
         return false;
     }
+
+
+
+
+
 }

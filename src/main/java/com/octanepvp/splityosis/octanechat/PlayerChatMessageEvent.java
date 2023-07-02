@@ -1,11 +1,14 @@
 package com.octanepvp.splityosis.octanechat;
 
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class PlayerChatMessageEvent extends Event implements Cancellable {
 
@@ -51,5 +54,41 @@ public class PlayerChatMessageEvent extends Event implements Cancellable {
     @Override
     public HandlerList getHandlers() {
         return HANDLERS;
+    }
+
+
+    public List<BaseComponent> replaceComponents(List<BaseComponent> baseComponents, String str, BaseComponent replacement) {
+        List<BaseComponent> newComponents = new ArrayList<>();
+
+        for (int i = 0; i < baseComponents.size(); i++) {
+
+            BaseComponent temp = baseComponents.get(i);
+
+            if(!temp.toPlainText().contains(str)){
+                newComponents.add(temp);
+                continue;
+            }
+            // Does contain
+            String[] string = temp.toPlainText().split(Pattern.quote(str), 2);
+            BaseComponent before = mapComponent(string[0], temp);
+
+            newComponents.add(before);
+            newComponents.add(replacement);
+
+            BaseComponent after;
+            if(string.length == 2){
+                after = mapComponent(string[1], temp);
+                newComponents.add(after);
+            }
+        }
+        return newComponents;
+    }
+
+    public BaseComponent mapComponent(String str, BaseComponent component){
+        TextComponent comp =  new TextComponent(str);
+        comp.setHoverEvent(component.getHoverEvent());
+        comp.setClickEvent(component.getClickEvent());
+        comp.setColor(comp.getColor());
+        return comp;
     }
 }
