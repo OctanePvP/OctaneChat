@@ -29,7 +29,10 @@ public final class OctaneChat extends JavaPlugin {
     public static boolean chatInvEnabled = false;
     public static String chatInvSymbol;
     public static String chatInvFormat;
+    public static String chatInvTitle;
     public static List<String> chatInvHoverText;
+    public static int chatInvExpireTime;
+    public static List<String> chatInvExpiredMessage;
 
     @Override
     public void onEnable() {
@@ -37,6 +40,7 @@ public final class OctaneChat extends JavaPlugin {
         Listeners listeners = new Listeners(this);
         getServer().getPluginManager().registerEvents(listeners, this);
         getCommand("octanechat").setExecutor(listeners);
+        getCommand("octanechatinv").setExecutor(listeners);
         loadConfig();
     }
 
@@ -59,7 +63,10 @@ public final class OctaneChat extends JavaPlugin {
         chatInvEnabled = getConfig().getBoolean("features.chat-item.chat-inv.enable");
         chatInvSymbol = getConfig().getString("features.chat-item.chat-inv.symbol");
         chatInvFormat = getConfig().getString("features.chat-item.chat-inv.format");
+        chatInvTitle = getConfig().getString("features.chat-item.chat-inv.inventory-title");
         chatInvHoverText = getConfig().getStringList("features.chat-item.chat-inv.hover-text");
+        chatInvExpireTime = getConfig().getInt("features.chat-item.chat-inv.inventory-expire-time");
+        chatInvExpiredMessage = getConfig().getStringList("features.chat-item.chat-inv.inventory-expired-message");
 
 
         ConfigurationSection componentsSection = getConfig().getConfigurationSection("components");

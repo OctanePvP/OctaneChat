@@ -1,9 +1,6 @@
 package com.octanepvp.splityosis.octanechat;
 
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -15,11 +12,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Listeners implements Listener, CommandExecutor {
 
@@ -59,6 +61,11 @@ public class Listeners implements Listener, CommandExecutor {
             if (e.getPlayer().hasPermission("octanechat.chat-item"))
                 message = applyItem(e.getPlayer(), message, event);
 
+        if (e.getMessage().contains(OctaneChat.chatInvSymbol)){
+            if (e.getPlayer().hasPermission("octanechat.chat-inv"))
+                message = applyInv(e.getPlayer(), message, event);
+        }
+
 
         for (Player reader : Bukkit.getOnlinePlayers()){
             List<BaseComponent> msg = new ArrayList<>();
@@ -85,6 +92,20 @@ public class Listeners implements Listener, CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if (command.getName().equalsIgnoreCase("octanechatinv")){
+            if (!(sender instanceof Player)) return false;
+            Player player = (Player) sender;
+            if (args.length == 0) return false;
+            Inventory inventory = inventoryMap.get(args[0]);
+            if (inventory == null) {
+                for (String s : OctaneChat.chatInvExpiredMessage)
+                    player.sendMessage(OctaneChat.translateAllColors(s));
+                return false;
+            }
+            player.openInventory(inventory);
+            return true;
+        }
+
         if (args.length == 0 || !args[0].equalsIgnoreCase("reload")) {
             sender.sendMessage(ChatColor.RED + "Did you mean '/octanechat reload' ?");
             return false;
@@ -96,28 +117,52 @@ public class Listeners implements Listener, CommandExecutor {
         return false;
     }
 
+    @EventHandler
+    public void click(InventoryClickEvent e){
+        if (e.getClickedInventory() != null)
+            if (e.getClickedInventory().getHolder() != null)
+                if (e.getClickedInventory().getHolder() instanceof PlayerInvSnapshot) {
+                    e.setCancelled(true);
+                    return;
+                }
+
+        if (e.getInventory().getHolder() != null)
+            if (e.getInventory().getHolder() instanceof PlayerInvSnapshot) {
+                e.setCancelled(true);
+            }
+    }
+
+    @EventHandler
+    public void drag(InventoryDragEvent e){
+        if (e.getInventory().getHolder() != null)
+            if (e.getInventory().getHolder() instanceof PlayerInvSnapshot) {
+                e.setCancelled(true);
+            }
+    }
+
     private List<BaseComponent> applyItem(Player player, List<BaseComponent> msg, PlayerChatMessageEvent e){
         ItemStack itemStack = player.getInventory().getItemInMainHand();
-        TextComponent textComponent;
+        BaseComponent[] textComponent;
 
         if (itemStack == null || itemStack.getType() == Material.AIR){
-            textComponent = new TextComponent(TextComponent.fromLegacyText(OctaneChat.translateAllColors(OctaneChat.chatItemHandItemFormat.replace("%player%", player.getName()))));
+            textComponent = TextComponent.fromLegacyText(OctaneChat.translateAllColors(OctaneChat.chatItemHandItemFormat.replace("%player%", player.getName())));
             ComponentBuilder componentBuilder = new ComponentBuilder();
             for (int i = 0; i < OctaneChat.chatItemHandItemHoverText.size(); i++) {
                 if (i != 0)
                     componentBuilder.append("\n");
-                componentBuilder.append(TextComponent.fromLegacyText(OctaneChat.translateAllColors(OctaneChat.chatItemHandItemHoverText.get(i))));
+                componentBuilder.append(TextComponent.fromLegacyText(ChatColor.RESET + OctaneChat.translateAllColors(OctaneChat.chatItemHandItemHoverText.get(i))));
             }
-            textComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, componentBuilder.create()));
+            for (int i = 0; i < textComponent.length; i++) {
+                textComponent[i].setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, componentBuilder.create()));
+            }
         }
         else{
             String itemName = getItemName(itemStack);
-            BaseComponent[] display = TextComponent.fromLegacyText(OctaneChat.translateAllColors(OctaneChat.chatItemFormat.replace("%amount%", String.valueOf(itemStack.getAmount())).replace("%item%", itemName)));
-            textComponent = new TextComponent(display);
+            textComponent = TextComponent.fromLegacyText(OctaneChat.translateAllColors(OctaneChat.chatItemFormat.replace("%amount%", String.valueOf(itemStack.getAmount())).replace("%item%", itemName)));
+
             ComponentBuilder componentBuilder = new ComponentBuilder();
-            componentBuilder.append(TextComponent.fromLegacyText(OctaneChat.translateAllColors(itemName)));
+            componentBuilder.append(TextComponent.fromLegacyText(OctaneChat.translateAllColors(itemName)), ComponentBuilder.FormatRetention.ALL);
             componentBuilder.append("\n");
-            componentBuilder.append(TextComponent.fromLegacyText(String.valueOf(ChatColor.RESET)));
 
             TreeMap<String, String> cursedEnchants = new TreeMap<>();
             TreeMap<String, String> normalEnchants = new TreeMap<>();
@@ -129,28 +174,56 @@ public class Listeners implements Listener, CommandExecutor {
             });
 
             for (Map.Entry<String, String> entry : normalEnchants.entrySet()) {
-                componentBuilder.append(TextComponent.fromLegacyText(ChatColor.GRAY + entry.getKey() + " " + entry.getValue()));
+                componentBuilder.append(TextComponent.fromLegacyText("" + ChatColor.RESET + ChatColor.GRAY + entry.getKey() + " " + entry.getValue()), ComponentBuilder.FormatRetention.ALL);
                 componentBuilder.append("\n");
-                componentBuilder.append(TextComponent.fromLegacyText(String.valueOf(ChatColor.RESET)));
             }
 
             for (Map.Entry<String, String> entry : cursedEnchants.entrySet()) {
-                componentBuilder.append(TextComponent.fromLegacyText(ChatColor.RED + entry.getKey()));
+                componentBuilder.append(TextComponent.fromLegacyText("" + ChatColor.RESET + ChatColor.RED + entry.getKey()), ComponentBuilder.FormatRetention.ALL);
                 componentBuilder.append("\n");
-                componentBuilder.append(TextComponent.fromLegacyText(String.valueOf(ChatColor.RESET)));
             }
 
 
             if (itemStack.hasItemMeta() && itemStack.getItemMeta().hasLore()){
                 for (String s : itemStack.getItemMeta().getLore()) {
-                    componentBuilder.append(TextComponent.fromLegacyText(String.valueOf(ChatColor.LIGHT_PURPLE) + ChatColor.ITALIC + s));
+                    componentBuilder.append(TextComponent.fromLegacyText("" + ChatColor.RESET + ChatColor.LIGHT_PURPLE + ChatColor.ITALIC + s), ComponentBuilder.FormatRetention.ALL);
                     componentBuilder.append("\n");
-                    componentBuilder.append(TextComponent.fromLegacyText(String.valueOf(ChatColor.RESET)));
                 }
             }
-            textComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, componentBuilder.create()));
+            for (int i = 0; i < textComponent.length; i++) {
+                textComponent[i].setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, componentBuilder.create()));
+            }
         }
         return e.replaceComponents(msg, OctaneChat.chatItemSymbol, textComponent);
+    }
+
+    private Map<String, Inventory> inventoryMap = new ConcurrentHashMap<>();
+    public List<BaseComponent> applyInv(Player player, List<BaseComponent> msg, PlayerChatMessageEvent e){
+        String uuid = UUID.randomUUID().toString();
+        Inventory snapshot = new PlayerInvSnapshot(player).getInventory();
+        inventoryMap.put(uuid, snapshot);
+
+        new BukkitRunnable(){
+            @Override
+            public void run() {
+                inventoryMap.remove(uuid);
+            }
+        }.runTaskLater(plugin, OctaneChat.chatInvExpireTime* 20L);
+
+        BaseComponent[] baseComponents = TextComponent.fromLegacyText(OctaneChat.translateAllColors(OctaneChat.chatInvFormat.replace("%player%", player.getName())));
+        ClickEvent clickEvent = new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/octanechatinv "+uuid);
+
+        ComponentBuilder builder = new ComponentBuilder();
+        for (String s : OctaneChat.chatInvHoverText) {
+            builder.append(TextComponent.fromLegacyText(OctaneChat.translateAllColors(s)));
+            builder.append("\n");
+        }
+        HoverEvent hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, builder.create());
+        for (int i = 0; i < baseComponents.length; i++) {
+            baseComponents[i].setClickEvent(clickEvent);
+            baseComponents[i].setHoverEvent(hoverEvent);
+        }
+        return e.replaceComponents(msg, OctaneChat.chatInvSymbol, baseComponents);
     }
 
     private String getItemName(ItemStack item){
@@ -172,7 +245,6 @@ public class Listeners implements Listener, CommandExecutor {
     private final static TreeMap<Integer, String> map = new TreeMap<>();
 
     static {
-
         map.put(1000, "M");
         map.put(900, "CM");
         map.put(500, "D");
@@ -186,7 +258,6 @@ public class Listeners implements Listener, CommandExecutor {
         map.put(5, "V");
         map.put(4, "IV");
         map.put(1, "I");
-
     }
 
     public final static String toRoman(int number) {
@@ -202,7 +273,7 @@ public class Listeners implements Listener, CommandExecutor {
             return "Curse Of Vanishing";
 
         String name = enchantment.getKey().getKey();
-        name.replace("_", " ");
+        name = name.replace("_", " ");
         return capitalizeWords(name);
     }
 

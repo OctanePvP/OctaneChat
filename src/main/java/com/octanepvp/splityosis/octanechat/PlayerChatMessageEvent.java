@@ -7,6 +7,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -57,7 +58,7 @@ public class PlayerChatMessageEvent extends Event implements Cancellable {
     }
 
 
-    public List<BaseComponent> replaceComponents(List<BaseComponent> baseComponents, String str, BaseComponent replacement) {
+    public List<BaseComponent> replaceComponents(List<BaseComponent> baseComponents, String str, BaseComponent[] replacement) {
         List<BaseComponent> newComponents = new ArrayList<>();
 
         for (int i = 0; i < baseComponents.size(); i++) {
@@ -73,7 +74,7 @@ public class PlayerChatMessageEvent extends Event implements Cancellable {
             BaseComponent before = mapComponent(string[0], temp);
 
             newComponents.add(before);
-            newComponents.add(replacement);
+            newComponents.addAll(Arrays.asList(replacement));
 
             BaseComponent after;
             if(string.length == 2){

@@ -35,5 +35,9 @@ features:
       enable: true
       symbol: "[inv]"
       format: "&d%player%'s inventory"
+      inventory-title: "&d%player%'s inventory"
+      inventory-expire-time: 1800 #Seconds
+      inventory-expired-message:
+        - "&cThis inventory snapshot has expired."
       hover-text:
-        - "&7Click to view"
+        - "&7Click to view the snapshot"
