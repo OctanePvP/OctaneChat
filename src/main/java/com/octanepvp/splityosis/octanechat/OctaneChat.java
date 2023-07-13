@@ -19,6 +19,18 @@ public final class OctaneChat extends JavaPlugin {
     private List<Component> chatFormat;
     private Map<String, Component> componentMap;
 
+    //Features
+    public static boolean chatItemEnabled = false;
+    public static String chatItemSymbol;
+    public static String chatItemFormat;
+    public static String chatItemHandItemFormat;
+    public static List<String> chatItemHandItemHoverText;
+
+    public static boolean chatInvEnabled = false;
+    public static String chatInvSymbol;
+    public static String chatInvFormat;
+    public static List<String> chatInvHoverText;
+
     @Override
     public void onEnable() {
         saveDefaultConfig();
@@ -37,6 +49,18 @@ public final class OctaneChat extends JavaPlugin {
         reloadConfig();
         String rawFormat = getConfig().getString("format");
         componentMap = new HashMap<>();
+
+        chatItemEnabled = getConfig().getBoolean("features.chat-item.enable");
+        chatItemSymbol = getConfig().getString("features.chat-item.symbol");
+        chatItemFormat = getConfig().getString("features.chat-item.format");
+        chatItemHandItemFormat = getConfig().getString("features.chat-item.hand-item-format");
+        chatItemHandItemHoverText = getConfig().getStringList("features.chat-item.hand-item-hover-text");
+
+        chatInvEnabled = getConfig().getBoolean("features.chat-item.chat-inv.enable");
+        chatInvSymbol = getConfig().getString("features.chat-item.chat-inv.symbol");
+        chatInvFormat = getConfig().getString("features.chat-item.chat-inv.format");
+        chatInvHoverText = getConfig().getStringList("features.chat-item.chat-inv.hover-text");
+
 
         ConfigurationSection componentsSection = getConfig().getConfigurationSection("components");
         if (componentsSection != null)

@@ -38,7 +38,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>C:\Users\thoma\Desktop\Prism\plugins</outputDirectory>
+                            <outputDirectory>C:\Users\bahaa\Desktop\Eclipse projects\OctaneChat</outputDirectory>
                             <shadedArtifactAttached>true</shadedArtifactAttached>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                         </configuration>

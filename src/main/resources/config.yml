@@ -20,3 +20,20 @@ components:
     click-event:
       action: "RUN_COMMAND"
       value: "/msg %player_name% hello"
+
+
+features:
+  chat-item:
+    enable: true
+    symbol: "[item]"
+    format: "&7%amount%x&f%item%"
+    hand-item-format: "&d%player%'s fist"
+    hand-item-hover-text:
+      - "&7Its a knuckle sandwich!"
+
+    chat-inv:
+      enable: true
+      symbol: "[inv]"
+      format: "&d%player%'s inventory"
+      hover-text:
+        - "&7Click to view"
