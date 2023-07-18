@@ -13,5 +13,3 @@ commands:
       - oc
       - ochat
     permission: octanechat.reload
-
-  octanechatinv:

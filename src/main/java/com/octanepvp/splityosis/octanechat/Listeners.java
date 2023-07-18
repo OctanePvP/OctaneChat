@@ -15,6 +15,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -22,11 +23,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Pattern;
 
 public class Listeners implements Listener, CommandExecutor {
 
-    private OctaneChat plugin;
+    public static final String secretInvCommand = UUID.randomUUID().toString();
 
+    private OctaneChat plugin;
     public Listeners(OctaneChat plugin) {
         this.plugin = plugin;
     }
@@ -92,20 +95,6 @@ public class Listeners implements Listener, CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (command.getName().equalsIgnoreCase("octanechatinv")){
-            if (!(sender instanceof Player)) return false;
-            Player player = (Player) sender;
-            if (args.length == 0) return false;
-            Inventory inventory = inventoryMap.get(args[0]);
-            if (inventory == null) {
-                for (String s : OctaneChat.chatInvExpiredMessage)
-                    player.sendMessage(OctaneChat.translateAllColors(s));
-                return false;
-            }
-            player.openInventory(inventory);
-            return true;
-        }
-
         if (args.length == 0 || !args[0].equalsIgnoreCase("reload")) {
             sender.sendMessage(ChatColor.RED + "Did you mean '/octanechat reload' ?");
             return false;
@@ -115,6 +104,21 @@ public class Listeners implements Listener, CommandExecutor {
         sender.sendMessage(ChatColor.GREEN + "Successfully reloaded the config!");
 
         return false;
+    }
+
+    @EventHandler
+    public void onCommand(PlayerCommandPreprocessEvent e){
+        if (!e.getMessage().startsWith("/" + secretInvCommand)) return;
+        String[] args = e.getMessage().split(Pattern.quote(" "));
+        if (args.length < 2) return;
+        Inventory inventory = inventoryMap.get(args[1]);
+        if (inventory == null) {
+            for (String s : OctaneChat.chatInvExpiredMessage)
+                e.getPlayer().sendMessage(OctaneChat.translateAllColors(s));
+            return;
+        }
+        e.setCancelled(true);
+        e.getPlayer().openInventory(inventory);
     }
 
     @EventHandler
@@ -211,7 +215,7 @@ public class Listeners implements Listener, CommandExecutor {
         }.runTaskLater(plugin, OctaneChat.chatInvExpireTime* 20L);
 
         BaseComponent[] baseComponents = TextComponent.fromLegacyText(OctaneChat.translateAllColors(OctaneChat.chatInvFormat.replace("%player%", player.getName())));
-        ClickEvent clickEvent = new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/octanechatinv "+uuid);
+        ClickEvent clickEvent = new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/" + secretInvCommand + " " + uuid);
 
         ComponentBuilder builder = new ComponentBuilder();
         for (String s : OctaneChat.chatInvHoverText) {

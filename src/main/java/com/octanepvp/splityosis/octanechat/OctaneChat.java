@@ -40,7 +40,6 @@ public final class OctaneChat extends JavaPlugin {
         Listeners listeners = new Listeners(this);
         getServer().getPluginManager().registerEvents(listeners, this);
         getCommand("octanechat").setExecutor(listeners);
-        getCommand("octanechatinv").setExecutor(listeners);
         loadConfig();
     }
 
