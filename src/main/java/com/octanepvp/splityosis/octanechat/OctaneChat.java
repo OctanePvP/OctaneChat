@@ -1,5 +1,9 @@
 package com.octanepvp.splityosis.octanechat;
 
+import com.octanepvp.splityosis.octanechat.files.ActionsConfig;
+import com.octanepvp.splityosis.octanechat.files.DataFile;
+import com.octanepvp.splityosis.octanechat.listeners.ActionsListeners;
+import com.octanepvp.splityosis.octanechat.listeners.Listeners;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -7,6 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,12 +39,22 @@ public final class OctaneChat extends JavaPlugin {
     public static int chatInvExpireTime;
     public static List<String> chatInvExpiredMessage;
 
+    private ActionsConfig actionsConfig;
+    private DataFile dataFile;
+
     @Override
     public void onEnable() {
         saveDefaultConfig();
+        actionsConfig = new ActionsConfig(getDataFolder(), "actions");
+        actionsConfig.initialize();
+
+        dataFile = new DataFile(new File(getDataFolder(), "data.yml"));
+        dataFile.initialize(this);
+
         Listeners listeners = new Listeners(this);
         getServer().getPluginManager().registerEvents(listeners, this);
         getCommand("octanechat").setExecutor(listeners);
+        getServer().getPluginManager().registerEvents(new ActionsListeners(this), this);
         loadConfig();
     }
 
@@ -50,6 +65,7 @@ public final class OctaneChat extends JavaPlugin {
 
     public void loadConfig(){
         reloadConfig();
+        actionsConfig.reload();
         String rawFormat = getConfig().getString("format");
         componentMap = new HashMap<>();
 
@@ -146,5 +162,13 @@ public final class OctaneChat extends JavaPlugin {
             nlst.add(translateAllColors(s));
         });
         return nlst;
+    }
+
+    public ActionsConfig getActionsConfig() {
+        return actionsConfig;
+    }
+
+    public DataFile getDataFile() {
+        return dataFile;
     }
 }

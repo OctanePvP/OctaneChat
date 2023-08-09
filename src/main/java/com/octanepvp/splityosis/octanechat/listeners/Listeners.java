@@ -1,5 +1,9 @@
-package com.octanepvp.splityosis.octanechat;
+package com.octanepvp.splityosis.octanechat.listeners;
 
+import com.octanepvp.splityosis.octanechat.Component;
+import com.octanepvp.splityosis.octanechat.OctaneChat;
+import com.octanepvp.splityosis.octanechat.PlayerChatMessageEvent;
+import com.octanepvp.splityosis.octanechat.PlayerInvSnapshot;
 import net.md_5.bungee.api.chat.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -16,6 +20,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -119,6 +124,11 @@ public class Listeners implements Listener, CommandExecutor {
         }
         e.setCancelled(true);
         e.getPlayer().openInventory(inventory);
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        
     }
 
     @EventHandler
