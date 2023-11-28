@@ -4,6 +4,7 @@ import com.octanepvp.splityosis.octanechat.Component;
 import com.octanepvp.splityosis.octanechat.OctaneChat;
 import com.octanepvp.splityosis.octanechat.PlayerChatMessageEvent;
 import com.octanepvp.splityosis.octanechat.PlayerInvSnapshot;
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.md_5.bungee.api.chat.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -52,7 +53,7 @@ public class Listeners implements Listener, CommandExecutor {
         else
             rawMessage = e.getMessage();
 
-        List<BaseComponent> message = Arrays.asList(TextComponent.fromLegacyText(rawMessage));
+        List<BaseComponent> message = Arrays.asList(TextComponent.fromLegacyText(OctaneChat.translateAllColors(PlaceholderAPI.setPlaceholders(e.getPlayer(), plugin.getChatColorPlaceholder()))+rawMessage));
 
         PlayerChatMessageEvent event = new PlayerChatMessageEvent(true, rawMessage, message);
         Bukkit.getServer().getPluginManager().callEvent(event);
@@ -64,15 +65,20 @@ public class Listeners implements Listener, CommandExecutor {
         }
 
 
-        //Chat features
-        if (e.getMessage().contains(OctaneChat.chatItemSymbol))
-            if (e.getPlayer().hasPermission("octanechat.chat-item"))
-                message = applyItem(e.getPlayer(), message, event);
 
-        if (e.getMessage().contains(OctaneChat.chatInvSymbol)){
-            if (e.getPlayer().hasPermission("octanechat.chat-inv"))
-                message = applyInv(e.getPlayer(), message, event);
-        }
+
+        //Chat features
+        if (OctaneChat.chatItemEnabled)
+            if (e.getMessage().contains(OctaneChat.chatItemSymbol))
+                if (e.getPlayer().hasPermission("octanechat.chat-item"))
+                    message = applyItem(e.getPlayer(), message, event);
+
+        if (OctaneChat.chatInvEnabled)
+            if (e.getMessage().contains(OctaneChat.chatInvSymbol)){
+                if (e.getPlayer().hasPermission("octanechat.chat-inv"))
+                    message = applyInv(e.getPlayer(), message, event);
+            }
+
 
 
         for (Player reader : Bukkit.getOnlinePlayers()){
@@ -128,7 +134,7 @@ public class Listeners implements Listener, CommandExecutor {
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event) {
-        
+
     }
 
     @EventHandler

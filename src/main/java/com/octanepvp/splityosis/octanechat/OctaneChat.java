@@ -23,6 +23,7 @@ public final class OctaneChat extends JavaPlugin {
 
     private List<Component> chatFormat;
     private Map<String, Component> componentMap;
+    private String chatColorPlaceholder;
 
     //Features
     public static boolean chatItemEnabled = false;
@@ -68,6 +69,7 @@ public final class OctaneChat extends JavaPlugin {
         actionsConfig.reload();
         String rawFormat = getConfig().getString("format");
         componentMap = new HashMap<>();
+        chatColorPlaceholder = getConfig().getString("chat-color");
 
         chatItemEnabled = getConfig().getBoolean("features.chat-item.enable");
         chatItemSymbol = getConfig().getString("features.chat-item.symbol");
@@ -75,13 +77,13 @@ public final class OctaneChat extends JavaPlugin {
         chatItemHandItemFormat = getConfig().getString("features.chat-item.hand-item-format");
         chatItemHandItemHoverText = getConfig().getStringList("features.chat-item.hand-item-hover-text");
 
-        chatInvEnabled = getConfig().getBoolean("features.chat-item.chat-inv.enable");
-        chatInvSymbol = getConfig().getString("features.chat-item.chat-inv.symbol");
-        chatInvFormat = getConfig().getString("features.chat-item.chat-inv.format");
-        chatInvTitle = getConfig().getString("features.chat-item.chat-inv.inventory-title");
-        chatInvHoverText = getConfig().getStringList("features.chat-item.chat-inv.hover-text");
-        chatInvExpireTime = getConfig().getInt("features.chat-item.chat-inv.inventory-expire-time");
-        chatInvExpiredMessage = getConfig().getStringList("features.chat-item.chat-inv.inventory-expired-message");
+        chatInvEnabled = getConfig().getBoolean("features.chat-inv.enable");
+        chatInvSymbol = getConfig().getString("features.chat-inv.symbol");
+        chatInvFormat = getConfig().getString("features.chat-inv.format");
+        chatInvTitle = getConfig().getString("features.chat-inv.inventory-title");
+        chatInvHoverText = getConfig().getStringList("features.chat-inv.hover-text");
+        chatInvExpireTime = getConfig().getInt("features.chat-inv.inventory-expire-time");
+        chatInvExpiredMessage = getConfig().getStringList("features.chat-inv.inventory-expired-message");
 
 
         ConfigurationSection componentsSection = getConfig().getConfigurationSection("components");
@@ -170,5 +172,9 @@ public final class OctaneChat extends JavaPlugin {
 
     public DataFile getDataFile() {
         return dataFile;
+    }
+
+    public String getChatColorPlaceholder() {
+        return chatColorPlaceholder;
     }
 }

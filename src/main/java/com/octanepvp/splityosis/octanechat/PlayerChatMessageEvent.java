@@ -89,7 +89,7 @@ public class PlayerChatMessageEvent extends Event implements Cancellable {
         TextComponent comp =  new TextComponent(str);
         comp.setHoverEvent(component.getHoverEvent());
         comp.setClickEvent(component.getClickEvent());
-        comp.setColor(comp.getColor());
+        comp.setColor(component.getColor());
         return comp;
     }
 }

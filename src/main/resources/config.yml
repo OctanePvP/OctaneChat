@@ -4,6 +4,8 @@
 #To call a defined component use '%{' before and '}% after the component's name.
 format: "%luckperms_prefix%%{player-name}%%luckperms_suffix%&f: %message%"
 
+#Placeholder api is applied.
+chat-color: "&7"
 
 #Components section.
 #To make a new component simply copy/paste a current one and change the values.
@@ -31,13 +33,13 @@ features:
     hand-item-hover-text:
       - "&7Its a knuckle sandwich!"
 
-    chat-inv:
-      enable: true
-      symbol: "[inv]"
-      format: "&d%player%'s inventory"
-      inventory-title: "&d%player%'s inventory"
-      inventory-expire-time: 1800 #Seconds
-      inventory-expired-message:
-        - "&cThis inventory snapshot has expired."
-      hover-text:
-        - "&7Click to view the snapshot"
+  chat-inv:
+    enable: true
+    symbol: "[inv]"
+    format: "&d%player%'s inventory"
+    inventory-title: "&d%player%'s inventory"
+    inventory-expire-time: 1800 #Seconds
+    inventory-expired-message:
+      - "&cThis inventory snapshot has expired."
+    hover-text:
+      - "&7Click to view the snapshot"
