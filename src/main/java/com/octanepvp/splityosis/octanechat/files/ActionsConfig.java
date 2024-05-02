@@ -1,9 +1,9 @@
 package com.octanepvp.splityosis.octanechat.files;
 
-import dev.splityosis.configsystem.configsystem.AnnotatedConfig;
-import dev.splityosis.configsystem.configsystem.ConfigField;
-import dev.splityosis.configsystem.configsystem.actionsystem.ActionData;
-import dev.splityosis.configsystem.configsystem.actionsystem.Actions;
+import com.octanepvp.splityosis.configsystem.configsystem.AnnotatedConfig;
+import com.octanepvp.splityosis.configsystem.configsystem.ConfigField;
+import com.octanepvp.splityosis.configsystem.configsystem.actionsystem.ActionData;
+import com.octanepvp.splityosis.configsystem.configsystem.actionsystem.Actions;
 
 import java.io.File;
 import java.util.Arrays;

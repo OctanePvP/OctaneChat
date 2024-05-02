@@ -9,9 +9,11 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,7 +49,11 @@ public final class OctaneChat extends JavaPlugin {
     public void onEnable() {
         saveDefaultConfig();
         actionsConfig = new ActionsConfig(getDataFolder(), "actions");
-        actionsConfig.initialize();
+        try {
+            actionsConfig.initialize();
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
 
         dataFile = new DataFile(new File(getDataFolder(), "data.yml"));
         dataFile.initialize(this);

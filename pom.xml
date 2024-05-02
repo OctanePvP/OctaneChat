@@ -87,10 +87,10 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.SplitYoSis</groupId>
-            <artifactId>ConfigSystem</artifactId>
-            <version>3.0.1</version>
-            <scope>compile</scope>
+            <groupId>com.octanepvp.splityosis</groupId>
+            <artifactId>octane-engine</artifactId>
+            <version>1.1-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>
