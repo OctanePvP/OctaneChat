@@ -55,7 +55,7 @@ public class Listeners implements Listener, CommandExecutor {
 
         List<BaseComponent> message = Arrays.asList(TextComponent.fromLegacyText(OctaneChat.translateAllColors(PlaceholderAPI.setPlaceholders(e.getPlayer(), plugin.getChatColorPlaceholder()))+rawMessage));
 
-        PlayerChatMessageEvent event = new PlayerChatMessageEvent(true, rawMessage, message);
+        PlayerChatMessageEvent event = new PlayerChatMessageEvent(e.isAsynchronous(), rawMessage, message);
         Bukkit.getServer().getPluginManager().callEvent(event);
         if (event.isCancelled()) return;
         message = event.getMessage();
