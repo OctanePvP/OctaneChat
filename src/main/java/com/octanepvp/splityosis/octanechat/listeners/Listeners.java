@@ -182,7 +182,6 @@ public class Listeners implements Listener, CommandExecutor {
 
             ComponentBuilder componentBuilder = new ComponentBuilder();
             componentBuilder.append(TextComponent.fromLegacyText(OctaneChat.translateAllColors(itemName)), ComponentBuilder.FormatRetention.NONE);
-            componentBuilder.append("\n");
 
             TreeMap<String, String> cursedEnchants = new TreeMap<>();
             TreeMap<String, String> normalEnchants = new TreeMap<>();
@@ -193,31 +192,19 @@ public class Listeners implements Listener, CommandExecutor {
                 else normalEnchants.put(getEnchantDisplayName(enchantment), toRoman(integer));
             });
 
-            boolean first = true;
             for (Map.Entry<String, String> entry : normalEnchants.entrySet()) {
-                if (first) {
-                    componentBuilder.append("\n");
-                    first = false;
-                }
+                componentBuilder.append("\n", ComponentBuilder.FormatRetention.NONE);
                 componentBuilder.append(TextComponent.fromLegacyText("" + ChatColor.RESET + ChatColor.GRAY + entry.getKey() + " " + entry.getValue()), ComponentBuilder.FormatRetention.NONE);
             }
 
-            first = true;
             for (Map.Entry<String, String> entry : cursedEnchants.entrySet()) {
-                if (first) {
-                    componentBuilder.append("\n");
-                    first = false;
-                }
+                componentBuilder.append("\n", ComponentBuilder.FormatRetention.NONE);
                 componentBuilder.append(TextComponent.fromLegacyText("" + ChatColor.RESET + ChatColor.RED + entry.getKey()), ComponentBuilder.FormatRetention.NONE);
             }
 
-            first = true;
             if (itemStack.hasItemMeta() && itemStack.getItemMeta().hasLore()){
                 for (String s : itemStack.getItemMeta().getLore()) {
-                    if (first) {
-                        componentBuilder.append("\n");
-                        first = false;
-                    }
+                    componentBuilder.append("\n", ComponentBuilder.FormatRetention.NONE);
                     componentBuilder.append(TextComponent.fromLegacyText("" + ChatColor.RESET + ChatColor.LIGHT_PURPLE + ChatColor.ITALIC + s), ComponentBuilder.FormatRetention.NONE);
                 }
             }

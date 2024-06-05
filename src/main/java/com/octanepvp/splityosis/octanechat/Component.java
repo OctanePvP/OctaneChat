@@ -62,7 +62,7 @@ public class Component {
                     if (j != 0) {
                         builder.append("\n", ComponentBuilder.FormatRetention.NONE);
                     }
-                    builder.append(TextComponent.fromLegacyText(hoverText.get(j)));
+                    builder.append(TextComponent.fromLegacyText(hoverText.get(j)), ComponentBuilder.FormatRetention.NONE);
                 }
                 components[i].setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, builder.create()));
             }
