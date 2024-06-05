@@ -181,7 +181,7 @@ public class Listeners implements Listener, CommandExecutor {
             textComponent = TextComponent.fromLegacyText(OctaneChat.translateAllColors(OctaneChat.chatItemFormat.replace("%amount%", String.valueOf(itemStack.getAmount())).replace("%item%", itemName)));
 
             ComponentBuilder componentBuilder = new ComponentBuilder();
-            componentBuilder.append(TextComponent.fromLegacyText(OctaneChat.translateAllColors(itemName)), ComponentBuilder.FormatRetention.ALL);
+            componentBuilder.append(TextComponent.fromLegacyText(OctaneChat.translateAllColors(itemName)), ComponentBuilder.FormatRetention.NONE);
             componentBuilder.append("\n");
 
             TreeMap<String, String> cursedEnchants = new TreeMap<>();
@@ -193,21 +193,32 @@ public class Listeners implements Listener, CommandExecutor {
                 else normalEnchants.put(getEnchantDisplayName(enchantment), toRoman(integer));
             });
 
+            boolean first = true;
             for (Map.Entry<String, String> entry : normalEnchants.entrySet()) {
-                componentBuilder.append(TextComponent.fromLegacyText("" + ChatColor.RESET + ChatColor.GRAY + entry.getKey() + " " + entry.getValue()), ComponentBuilder.FormatRetention.ALL);
-                componentBuilder.append("\n");
+                if (first) {
+                    componentBuilder.append("\n");
+                    first = false;
+                }
+                componentBuilder.append(TextComponent.fromLegacyText("" + ChatColor.RESET + ChatColor.GRAY + entry.getKey() + " " + entry.getValue()), ComponentBuilder.FormatRetention.NONE);
             }
 
+            first = true;
             for (Map.Entry<String, String> entry : cursedEnchants.entrySet()) {
-                componentBuilder.append(TextComponent.fromLegacyText("" + ChatColor.RESET + ChatColor.RED + entry.getKey()), ComponentBuilder.FormatRetention.ALL);
-                componentBuilder.append("\n");
+                if (first) {
+                    componentBuilder.append("\n");
+                    first = false;
+                }
+                componentBuilder.append(TextComponent.fromLegacyText("" + ChatColor.RESET + ChatColor.RED + entry.getKey()), ComponentBuilder.FormatRetention.NONE);
             }
 
-
+            first = true;
             if (itemStack.hasItemMeta() && itemStack.getItemMeta().hasLore()){
                 for (String s : itemStack.getItemMeta().getLore()) {
-                    componentBuilder.append(TextComponent.fromLegacyText("" + ChatColor.RESET + ChatColor.LIGHT_PURPLE + ChatColor.ITALIC + s), ComponentBuilder.FormatRetention.ALL);
-                    componentBuilder.append("\n");
+                    if (first) {
+                        componentBuilder.append("\n");
+                        first = false;
+                    }
+                    componentBuilder.append(TextComponent.fromLegacyText("" + ChatColor.RESET + ChatColor.LIGHT_PURPLE + ChatColor.ITALIC + s), ComponentBuilder.FormatRetention.NONE);
                 }
             }
             for (int i = 0; i < textComponent.length; i++) {
@@ -234,9 +245,13 @@ public class Listeners implements Listener, CommandExecutor {
         ClickEvent clickEvent = new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/" + secretInvCommand + " " + uuid);
 
         ComponentBuilder builder = new ComponentBuilder();
+        boolean first = true;
         for (String s : OctaneChat.chatInvHoverText) {
-            builder.append(TextComponent.fromLegacyText(OctaneChat.translateAllColors(s)));
-            builder.append("\n");
+            if (first) {
+                builder.append("\n");
+                first = false;
+            }
+            builder.append(TextComponent.fromLegacyText(OctaneChat.translateAllColors(s)), ComponentBuilder.FormatRetention.NONE);
         }
         HoverEvent hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, builder.create());
         for (int i = 0; i < baseComponents.length; i++) {

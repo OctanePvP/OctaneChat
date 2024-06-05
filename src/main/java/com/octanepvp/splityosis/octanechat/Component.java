@@ -59,8 +59,9 @@ public class Component {
             if (hoverText != null) {
                 ComponentBuilder builder = new ComponentBuilder();
                 for (int j = 0; j < hoverText.size(); j++) {
-                    if (j != 0)
-                        builder.append("\n");
+                    if (j != 0) {
+                        builder.append("\n", ComponentBuilder.FormatRetention.NONE);
+                    }
                     builder.append(TextComponent.fromLegacyText(hoverText.get(j)));
                 }
                 components[i].setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, builder.create()));
