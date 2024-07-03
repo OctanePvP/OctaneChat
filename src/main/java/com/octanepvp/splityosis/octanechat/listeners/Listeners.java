@@ -1,9 +1,9 @@
 package com.octanepvp.splityosis.octanechat.listeners;
 
-import com.octanepvp.splityosis.octanechat.Component;
+import com.octanepvp.splityosis.octanechat.objects.Component;
 import com.octanepvp.splityosis.octanechat.OctaneChat;
-import com.octanepvp.splityosis.octanechat.PlayerChatMessageEvent;
-import com.octanepvp.splityosis.octanechat.PlayerInvSnapshot;
+import com.octanepvp.splityosis.octanechat.events.PlayerChatMessageEvent;
+import com.octanepvp.splityosis.octanechat.objects.PlayerInvSnapshot;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.md_5.bungee.api.chat.*;
 import org.bukkit.Bukkit;

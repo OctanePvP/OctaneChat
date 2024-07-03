@@ -1,5 +1,6 @@
-package com.octanepvp.splityosis.octanechat;
+package com.octanepvp.splityosis.octanechat.objects;
 
+import com.octanepvp.splityosis.octanechat.OctaneChat;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.md_5.bungee.api.chat.*;
 import org.bukkit.entity.Player;

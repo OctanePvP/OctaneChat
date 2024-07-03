@@ -1,9 +1,12 @@
 package com.octanepvp.splityosis.octanechat;
 
 import com.octanepvp.splityosis.octanechat.files.ActionsConfig;
+import com.octanepvp.splityosis.octanechat.files.AnnouncementsConfig;
 import com.octanepvp.splityosis.octanechat.files.DataFile;
 import com.octanepvp.splityosis.octanechat.listeners.ActionsListeners;
 import com.octanepvp.splityosis.octanechat.listeners.Listeners;
+import com.octanepvp.splityosis.octanechat.objects.AnnouncementScheduler;
+import com.octanepvp.splityosis.octanechat.objects.Component;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -22,6 +25,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class OctaneChat extends JavaPlugin {
+
+    public static OctaneChat plugin;
+    public static AnnouncementsConfig announcementsConfig;
 
     private List<Component> chatFormat;
     private Map<String, Component> componentMap;
@@ -47,10 +53,17 @@ public final class OctaneChat extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        plugin = this;
         saveDefaultConfig();
         actionsConfig = new ActionsConfig(getDataFolder(), "actions");
         try {
             actionsConfig.initialize();
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
+        announcementsConfig = new AnnouncementsConfig(getDataFolder(), "announcements");
+        try {
+            announcementsConfig.initialize();
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
@@ -73,6 +86,9 @@ public final class OctaneChat extends JavaPlugin {
     public void loadConfig(){
         reloadConfig();
         actionsConfig.reload();
+        announcementsConfig.reload();
+        AnnouncementScheduler.reloadSchedule();
+
         String rawFormat = getConfig().getString("format");
         componentMap = new HashMap<>();
         chatColorPlaceholder = getConfig().getString("chat-color");

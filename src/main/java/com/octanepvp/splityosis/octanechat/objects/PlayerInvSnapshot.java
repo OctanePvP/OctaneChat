@@ -1,5 +1,6 @@
-package com.octanepvp.splityosis.octanechat;
+package com.octanepvp.splityosis.octanechat.objects;
 
+import com.octanepvp.splityosis.octanechat.OctaneChat;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
