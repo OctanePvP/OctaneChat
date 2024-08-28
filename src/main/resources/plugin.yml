@@ -2,7 +2,7 @@ name: OctaneChat
 version: '${project.version}'
 main: com.octanepvp.splityosis.octanechat.OctaneChat
 api-version: 1.19
-authors: [ SplitYoSis ]
+authors: [ SplitYoSis, 01Henry ]
 depend:
   - PlaceholderAPI
 
