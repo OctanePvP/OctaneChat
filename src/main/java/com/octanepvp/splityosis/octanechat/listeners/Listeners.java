@@ -82,6 +82,8 @@ public class Listeners implements Listener, CommandExecutor {
 
 
         for (Player reader : Bukkit.getOnlinePlayers()){
+            if (hasIgnored(reader, e.getPlayer()))
+                continue;
             List<BaseComponent> msg = new ArrayList<>();
             for (Component component : processedFormat) {
                 if (component.getDisplayText().equals("%message%"))
@@ -103,6 +105,9 @@ public class Listeners implements Listener, CommandExecutor {
         Bukkit.getConsoleSender().spigot().sendMessage(msg.toArray(new BaseComponent[0]));
     }
 
+    private boolean hasIgnored(Player reader, Player sender){
+      return false;
+    };
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
