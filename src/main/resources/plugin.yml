@@ -4,6 +4,7 @@ main: com.octanepvp.splityosis.octanechat.OctaneChat
 api-version: 1.19
 authors: [ SplitYoSis, 01Henry ]
 depend:
+  - SYSEngine
   - PlaceholderAPI
 
 commands:

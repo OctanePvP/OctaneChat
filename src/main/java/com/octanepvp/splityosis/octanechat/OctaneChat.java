@@ -60,6 +60,7 @@ public final class OctaneChat extends JavaPlugin {
         configManager = ConfigLib.createConfigManager(this);
         saveDefaultConfig();
         actionsConfig = new ActionsConfig();//getDataFolder(), "actions");
+        announcementsConfig = new AnnouncementsConfig();
         try {
             configManager.registerConfig(actionsConfig, new File(getDataFolder(), "actions"));
         } catch (Exception e) {
