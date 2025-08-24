@@ -92,5 +92,11 @@
             <version>1.5.0</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.massivecraft</groupId>
+            <artifactId>Factions</artifactId>
+            <version>1.6.9.5-U0.5.18</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 </project>

@@ -1,5 +1,8 @@
 package com.octanepvp.splityosis.octanechat.listeners;
 
+import com.massivecraft.factions.FPlayer;
+import com.massivecraft.factions.FPlayers;
+import com.massivecraft.factions.struct.ChatMode;
 import com.octanepvp.splityosis.octanechat.objects.Component;
 import com.octanepvp.splityosis.octanechat.OctaneChat;
 import com.octanepvp.splityosis.octanechat.events.PlayerChatMessageEvent;
@@ -40,8 +43,14 @@ public class Listeners implements Listener, CommandExecutor {
         this.plugin = plugin;
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onChat(AsyncPlayerChatEvent e){
+        // Cancel chatting if in public chat
+        if (OctaneChat.factionsEnabled) {
+            FPlayer fplayer = FPlayers.getInstance().getByPlayer(e.getPlayer());
+            ChatMode chatMode = fplayer.getChatMode();
+            if (chatMode != ChatMode.PUBLIC) return;
+        }
         e.setCancelled(true);
 
         List<Component> formatTemplate = plugin.getChatFormat();

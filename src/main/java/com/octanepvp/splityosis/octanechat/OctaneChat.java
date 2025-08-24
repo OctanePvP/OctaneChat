@@ -14,11 +14,10 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +26,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class OctaneChat extends JavaPlugin {
+
+    public static boolean factionsEnabled;
 
     public static OctaneChat plugin;
     public static AnnouncementsConfig announcementsConfig;
@@ -80,6 +81,7 @@ public final class OctaneChat extends JavaPlugin {
         getCommand("octanechat").setExecutor(listeners);
         getServer().getPluginManager().registerEvents(new ActionsListeners(this), this);
         loadConfig();
+        factionsEnabled = hookFactions();
     }
 
     @Override
@@ -207,5 +209,11 @@ public final class OctaneChat extends JavaPlugin {
 
     public String getChatColorPlaceholder() {
         return chatColorPlaceholder;
+    }
+
+    public boolean hookFactions() {
+        Plugin factionsPlugin = Bukkit.getPluginManager().getPlugin("Factions");
+        if (factionsPlugin == null) return false;
+        return factionsPlugin.isEnabled();
     }
 }
