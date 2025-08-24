@@ -62,12 +62,12 @@ public final class OctaneChat extends JavaPlugin {
         actionsConfig = new ActionsConfig();//getDataFolder(), "actions");
         announcementsConfig = new AnnouncementsConfig();
         try {
-            configManager.registerConfig(actionsConfig, new File(getDataFolder(), "actions"));
+            configManager.registerConfig(actionsConfig, new File(getDataFolder(), "actions.yml"));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
         try {
-            configManager.registerConfig(announcementsConfig, new File(getDataFolder(), "announcements"));
+            configManager.registerConfig(announcementsConfig, new File(getDataFolder(), "announcements.yml"));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
