@@ -1,7 +1,5 @@
 package com.octanepvp.splityosis.octanechat.utils;
 
-import com.octanepvp.splityosis.configsystem.configsystem.actionsystem.ActionData;
-import com.octanepvp.splityosis.configsystem.configsystem.actionsystem.Actions;
 import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
@@ -123,26 +121,6 @@ public class Util {
         return item;
     }
 
-    public static void setItemInConfig(ConfigurationSection section, String path, ItemStack item){
-        String name = null;
-        List<String> lore = null;
-
-        if (item.getItemMeta() != null){
-            if (item.getItemMeta().hasDisplayName())
-                name = item.getItemMeta().getDisplayName();
-            if (item.getItemMeta().hasLore())
-                lore = item.getItemMeta().getLore();
-        }
-
-        section.set(path+".material", item.getType().name());
-        section.set(path+".custom-name", name);
-        section.set(path+".custom-lore", lore);
-
-        Map<Enchantment, Integer> enchs = item.getEnchantments();
-        for (Enchantment enchantment : enchs.keySet()) {
-            section.set(path+".enchants."+enchantment.getName(), enchs.get(enchantment));
-        }
-    }
 
     public static String locationToString(Location location){
         String world = location.getWorld().getName();
@@ -168,46 +146,6 @@ public class Util {
         return builder.substring(0, builder.length()-1);
     }
 
-    public static Actions getDefaultActions(Sound sound, String... msg){
-        List<ActionData> actionDataList = new ArrayList<>();
-        if (msg != null)
-            actionDataList.add(new ActionData("MESSAGE", Arrays.asList(msg)));
-        if (sound != null)
-            actionDataList.add(new ActionData("SOUND", Arrays.asList(sound.name())));
-        return new Actions(actionDataList);
-    }
-
-    public static Actions getDefaultSoundActions(Sound sound){
-        List<ActionData> actionDataList = new ArrayList<>();
-        if (sound != null)
-            actionDataList.add(new ActionData("SOUND", Arrays.asList(sound.name())));
-        return new Actions(actionDataList);
-    }
-
-    public static Actions getDefaultActionsAll(Sound sound, String... msg){
-        List<ActionData> actionDataList = new ArrayList<>();
-        if (msg != null)
-            actionDataList.add(new ActionData("MESSAGE_ALL", Arrays.asList(msg)));
-        if (sound != null)
-            actionDataList.add(new ActionData("SOUND_ALL", Arrays.asList(sound.name())));
-        return new Actions(actionDataList);
-    }
-
-    public static Actions getDefaultTitleActions(Sound sound, String title, String subtitle, String... msg){
-        List<ActionData> actionDataList = new ArrayList<>();
-        if (msg != null)
-            actionDataList.add(new ActionData("MESSAGE", Arrays.asList(msg)));
-        if (sound != null)
-            actionDataList.add(new ActionData("SOUND", Arrays.asList(sound.name())));
-        if (title != null && subtitle != null)
-            actionDataList.add(new ActionData("TITLE", Arrays.asList(title, subtitle, "20", "20", "20")));
-        return new Actions(actionDataList);
-    }
-
-
-    public static void performActionsGeneraly(Actions actions, Map<String, String> placeholders){
-        actions.perform(null, placeholders);
-    }
 
     public static String createBar(int completed, int total, String completedChar, String emptyChar, String maxedOutChar){
         StringBuilder builder = new StringBuilder();

@@ -1,19 +1,16 @@
 package com.octanepvp.splityosis.octanechat.files;
 
-import com.octanepvp.splityosis.configsystem.configsystem.AnnotatedConfig;
-import com.octanepvp.splityosis.configsystem.configsystem.ConfigField;
-import com.octanepvp.splityosis.octaneengine.files.logics.ActionsMap;
+import dev.splityosis.sysengine.actions.Actions;
+import dev.splityosis.sysengine.actions.ActionsBuilder;
+import dev.splityosis.sysengine.configlib.configuration.Configuration;
 
-import java.io.File;
+import java.util.Map;
 
-public class AnnouncementsConfig extends AnnotatedConfig {
-    public AnnouncementsConfig(File parentDirectory, String name) {
-        super(parentDirectory, name);
-    }
+public class AnnouncementsConfig implements Configuration {
 
-    @ConfigField(path = "settings.seconds-between-announcements")
+    @Field
     public int secondsBetweenAnnouncements = 60;
 
-    @ConfigField(path = "announcements")
-    public ActionsMap actionsMap = new ActionsMap();
+    @Field
+    public Map<String, Actions> actionsMap = Map.of("discord", new ActionsBuilder().sendMessage("Join our discord").build());
 }

@@ -7,6 +7,8 @@ import com.octanepvp.splityosis.octanechat.listeners.ActionsListeners;
 import com.octanepvp.splityosis.octanechat.listeners.Listeners;
 import com.octanepvp.splityosis.octanechat.objects.AnnouncementScheduler;
 import com.octanepvp.splityosis.octanechat.objects.Component;
+import dev.splityosis.sysengine.configlib.ConfigLib;
+import dev.splityosis.sysengine.configlib.manager.ConfigManager;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -28,6 +30,7 @@ public final class OctaneChat extends JavaPlugin {
 
     public static OctaneChat plugin;
     public static AnnouncementsConfig announcementsConfig;
+    public static ConfigManager configManager;
 
     private List<Component> chatFormat;
     private Map<String, Component> componentMap;
@@ -54,18 +57,18 @@ public final class OctaneChat extends JavaPlugin {
     @Override
     public void onEnable() {
         plugin = this;
+        configManager = ConfigLib.createConfigManager(this);
         saveDefaultConfig();
-        actionsConfig = new ActionsConfig(getDataFolder(), "actions");
+        actionsConfig = new ActionsConfig();//getDataFolder(), "actions");
         try {
-            actionsConfig.initialize();
-        } catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
+            configManager.registerConfig(actionsConfig, new File(getDataFolder(), "actions"));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        announcementsConfig = new AnnouncementsConfig(getDataFolder(), "announcements");
         try {
-            announcementsConfig.initialize();
-        } catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
+            configManager.registerConfig(announcementsConfig, new File(getDataFolder(), "announcements"));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
 
         dataFile = new DataFile(new File(getDataFolder(), "data.yml"));
@@ -85,8 +88,13 @@ public final class OctaneChat extends JavaPlugin {
 
     public void loadConfig(){
         reloadConfig();
-        actionsConfig.reload();
-        announcementsConfig.reload();
+        try {
+            configManager.reload(actionsConfig);
+            configManager.reload(announcementsConfig);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
         AnnouncementScheduler.reloadSchedule();
 
         String rawFormat = getConfig().getString("format");

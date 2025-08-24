@@ -1,7 +1,8 @@
 package com.octanepvp.splityosis.octanechat.objects;
 
-import com.octanepvp.splityosis.configsystem.configsystem.actionsystem.Actions;
 import com.octanepvp.splityosis.octanechat.OctaneChat;
+import dev.splityosis.sysengine.actions.Actions;
+import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Collection;
@@ -24,7 +25,7 @@ public class AnnouncementScheduler {
             public void run() {
                 if (on){
                     Actions actions = getRandomEntry(OctaneChat.announcementsConfig.actionsMap.values());
-                    actions.performOnAll();
+                    Bukkit.getServer().getOnlinePlayers().forEach(actions::execute);
                     return;
                 }
                 this.cancel();

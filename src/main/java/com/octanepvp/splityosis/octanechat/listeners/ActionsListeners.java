@@ -22,12 +22,12 @@ public class ActionsListeners implements Listener {
 
         if (octaneChat.getActionsConfig().onFirstLoginEnable && !octaneChat.getDataFile().getConfig().contains("login-times."+e.getPlayer().getUniqueId())){
             octaneChat.getDataFile().getConfig().set("login-times."+e.getPlayer().getUniqueId(), System.currentTimeMillis());
-            octaneChat.getActionsConfig().onFirstLoginActions.perform(e.getPlayer(), null);
+            octaneChat.getActionsConfig().onFirstLoginActions.execute(e.getPlayer());
             return;
         }
 
         if (octaneChat.getActionsConfig().onLoginEnable)
-            octaneChat.getActionsConfig().onLoginActions.perform(e.getPlayer(), null);
+            octaneChat.getActionsConfig().onLoginActions.execute(e.getPlayer());
     }
 
     @EventHandler
@@ -36,6 +36,6 @@ public class ActionsListeners implements Listener {
             e.setQuitMessage(null);
 
         if (octaneChat.getActionsConfig().onLogoutEnable)
-            octaneChat.getActionsConfig().onLogoutActions.perform(e.getPlayer(), null);
+            octaneChat.getActionsConfig().onLogoutActions.execute(e.getPlayer());
     }
 }

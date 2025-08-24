@@ -1,41 +1,36 @@
 package com.octanepvp.splityosis.octanechat.files;
 
-import com.octanepvp.splityosis.configsystem.configsystem.AnnotatedConfig;
-import com.octanepvp.splityosis.configsystem.configsystem.ConfigField;
-import com.octanepvp.splityosis.configsystem.configsystem.actionsystem.ActionData;
-import com.octanepvp.splityosis.configsystem.configsystem.actionsystem.Actions;
+import dev.splityosis.sysengine.actions.Actions;
+import dev.splityosis.sysengine.actions.ActionsBuilder;
+import dev.splityosis.sysengine.configlib.configuration.Configuration;
 
 import java.io.File;
 import java.util.Arrays;
 
-public class ActionsConfig extends AnnotatedConfig {
-    public ActionsConfig(File parentDirectory, String name) {
-        super(parentDirectory, name);
-    }
+public class ActionsConfig implements Configuration {
 
-
-    @ConfigField(path = "on-login.enable")
+    @Field
     public boolean onLoginEnable = true;
 
-    @ConfigField(path = "on-login.actions")
-    public Actions onLoginActions = new Actions(Arrays.asList(new ActionData("MESSAGE", Arrays.asList("&6&lWelcome !!!!!!"))));
+    @Field
+    public Actions onLoginActions = new ActionsBuilder().sendMessage("Welcome").build();
 
-    @ConfigField(path = "on-login.disable-login-message")
+    @Field
     public boolean disableLoginMessage = true;
 
-    @ConfigField(path = "on-first-login.enable")
+    @Field
     public boolean onFirstLoginEnable = true;
 
-    @ConfigField(path = "on-first-login.actions")
-    public Actions onFirstLoginActions = new Actions(Arrays.asList(new ActionData("MESSAGE", Arrays.asList("&6&lWelcome for the first time!!!!!!"))));
+    @Field
+    public Actions onFirstLoginActions =  new ActionsBuilder().sendMessage("Welcome for the first time").build();
 
-    @ConfigField(path = "on-logout.disable-login-message")
+    @Field
     public boolean disableLogoutMessage = true;
 
-    @ConfigField(path = "on-logout.enable")
+    @Field
     public boolean onLogoutEnable = true;
 
-    @ConfigField(path = "on-logout.actions")
-    public Actions onLogoutActions = new Actions(Arrays.asList(new ActionData("TITLEALL", Arrays.asList("&e%player_name% &dhas logged off!", " ", "20", "20", "20"))));
+    @Field
+    public Actions onLogoutActions = new ActionsBuilder().sendTitleAll("%player_name% has logged off!", " ", 20, 20 ,20).build();
 
 }
